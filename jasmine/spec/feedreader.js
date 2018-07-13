@@ -83,6 +83,17 @@ $(function() {
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+         beforeEach(function(done) {
+           loadFeed(0, function() {
+             done();
+           });
+         });
+
+         it('feed container has at least one element', function(done) {
+           const containerSize = document.querySelector('.feed').childNodes.length;
+           expect(containerSize).toBeGreaterThan(0);
+           done();
+         });
     });
 
     /* TODO: Write a new test suite named "New Feed Selection" */
