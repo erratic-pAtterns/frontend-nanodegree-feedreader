@@ -49,7 +49,7 @@ $(function() {
          */
 
          it('is hidden by default', function() {
-           expect(htmlBody.className).toBe('menu-hidden');
+           expect(htmlBody.classList.contains('menu-hidden')).toBe(true);
          });
 
          /* Ensures the menu changes visibility when the menu icon is clicked.
@@ -59,9 +59,9 @@ $(function() {
 
           it('changes visibility on click', function() {
             sideMenu.click();
-            expect(htmlBody.className).not.toBe('menu-hidden');
+            expect(htmlBody.classList.contains('menu-hidden')).toBe(false);
             sideMenu.click();
-            expect(htmlBody.className).toBe('menu-hidden');
+            expect(htmlBody.classList.contains('menu-hidden')).toBe(true);
           });
     });
 
@@ -76,15 +76,12 @@ $(function() {
           */
 
          beforeEach(function(done) {
-           loadFeed(0, function() {
-             done();
-           });
+           loadFeed(0, done);
          });
 
-         it('feed container has at least one element', function(done) {
-           const elCount = document.querySelector('.feed').childElementCount;
+         it('.feed container has at least one .entry element', function() {
+           const elCount = document.querySelectorAll('.feed .entry').length;
            expect(elCount).toBeGreaterThan(0);
-           done();
          });
     });
 
@@ -93,27 +90,20 @@ $(function() {
          * that the content actually changes.
          */
 
-         let before, after;
+         let urlBefore, urlAfter;
 
          beforeEach(function(done) {
-           before = document.querySelector('.entry-link').getAttribute('href');
-           // Load second feed from allFeeds
            loadFeed(1, function() {
-             done();
+             urlBefore = document.querySelector('.entry-link').getAttribute('href');
+             loadFeed(0, function() {
+               urlAfter = document.querySelector('.entry-link').getAttribute('href');
+               done();
+             });
            });
          });
 
-         afterEach(function(done) {
-           // Load the initial feed after test is done
-           loadFeed(0, function() {
-             done();
-           });
-         });
-
-         it('content of feed container changes upon loadFeed', function (done) {
-           after = document.querySelector('.entry-link').getAttribute('href');
-           expect(after).not.toBe(before);
-           done();
+         it('content of feed container changes upon loadFeed', function () {
+           expect(urlAfter).not.toBe(urlBefore);
          });
     });
 }());
