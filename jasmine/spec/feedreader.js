@@ -16,8 +16,7 @@ $(function() {
          */
 
         it('are defined', function() {
-            expect(allFeeds).toBeDefined();
-            expect(allFeeds.length).not.toBe(0);
+            expect(allFeeds).not.toBeFalsy();
         });
 
         /* Ensures that each feed in the allFeeds object has a URL defined
@@ -83,8 +82,8 @@ $(function() {
          });
 
          it('feed container has at least one element', function(done) {
-           const containerSize = document.querySelector('.feed').childNodes.length;
-           expect(containerSize).toBeGreaterThan(0);
+           const elCount = document.querySelector('.feed').childElementCount;
+           expect(elCount).toBeGreaterThan(0);
            done();
          });
     });
@@ -97,20 +96,22 @@ $(function() {
          let before, after;
 
          beforeEach(function(done) {
-           before = Array.from(document.querySelector('.feed').childNodes);
+           before = document.querySelector('.entry-link').getAttribute('href');
+           // Load second feed from allFeeds
            loadFeed(1, function() {
              done();
            });
          });
 
          afterEach(function(done) {
+           // Load the initial feed after test is done
            loadFeed(0, function() {
              done();
            });
          });
 
          it('content of feed container changes upon loadFeed', function (done) {
-           after = Array.from(document.querySelector('.feed').childNodes);
+           after = document.querySelector('.entry-link').getAttribute('href');
            expect(after).not.toBe(before);
            done();
          });
