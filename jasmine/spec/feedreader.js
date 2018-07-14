@@ -102,5 +102,25 @@ $(function() {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+         let before, after;
+
+         beforeEach(function(done) {
+           before = Array.from(document.querySelector('.feed').childNodes);
+           loadFeed(1, function() {
+             done();
+           });
+         });
+
+         afterEach(function(done) {
+           loadFeed(0, function() {
+             done();
+           });
+         });
+
+         it('content of feed container changes upon loadFeed', function (done) {
+           after = Array.from(document.querySelector('.feed').childNodes);
+           expect(after).not.toBe(before);
+           done();
+         });
     });
 }());
